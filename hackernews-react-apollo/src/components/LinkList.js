@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import {Query} from 'react-apollo'
+import React from 'react'
+import {useQuery} from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import Link from './Link'
 
@@ -15,25 +15,17 @@ const FEED_QUERY = gql`
     }
   }
 `
-class LinkList extends Component {
-  render() {
-    return (
-      <Query query={FEED_QUERY}>
-        {({loading, error, data}) => {
-          if (loading) return <div>Fetching</div>
-          if (error) return <div>Error</div>
+export default function LinkList() {
+  const {loading, error, data} = useQuery(FEED_QUERY); 
 
-          const linksToRender = data.feed.links
+  if (loading) return <div>Fetching</div>
+  if (error) return <div>Error</div>
 
-          return (
-            <div>
-              {linksToRender.map(link => <Link key={link.id} link={link} />)}
-            </div>
-          )
-        }}
-      </Query>
-    )
-  }
+  const linksToRender = data.feed.links
+
+  return (
+    <div>
+      {linksToRender.map(link => <Link key={link.id} link={link} />)}
+    </div>
+  )
 }
-
-export default LinkList
