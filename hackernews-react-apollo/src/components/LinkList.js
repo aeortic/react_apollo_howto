@@ -11,6 +11,16 @@ const FEED_QUERY = gql`
         createdAt
         url
         description
+        postedBy {
+          id
+          name
+        }
+        votes {
+          id
+          user {
+            id
+          }
+        }
       }
     }
   }
@@ -25,7 +35,11 @@ export default function LinkList() {
 
   return (
     <div>
-      {linksToRender.map(link => <Link key={link.id} link={link} />)}
+      {
+        linksToRender
+        .filter(link => link.description && link.url)
+        .map((link, index) => <Link key={link.id} link={link} index={index}/>)
+      }
     </div>
   )
 }
